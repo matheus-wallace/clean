@@ -36,8 +36,6 @@ export class CreateQuestionController {
       },
     });
 
-    console.log(registredSlug);
-
     if (registredSlug) {
       throw new ConflictException('Slug already registred');
     }
