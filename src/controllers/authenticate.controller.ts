@@ -43,7 +43,7 @@ export class SessionsAuthenticateController {
     const accessToken = this.jwt.sign({ sub: user.id });
 
     return {
-      acees_token: accessToken,
+      access_token: accessToken,
     };
   }
 }
