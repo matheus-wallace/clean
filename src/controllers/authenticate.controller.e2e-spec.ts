@@ -1,11 +1,11 @@
-import { AppModule } from '@/app.module';
-import { PrismaService } from '@/prisma/prisma.service';
-import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { hash } from 'bcryptjs';
-import request from 'supertest';
+import { AppModule } from "@/app.module";
+import { PrismaService } from "@/prisma/prisma.service";
+import { INestApplication } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import { hash } from "bcryptjs";
+import request from "supertest";
 
-describe('Authenticate (E2E)', () => {
+describe("Authenticate (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -15,32 +15,33 @@ describe('Authenticate (E2E)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    prisma = moduleRef.get(PrismaService);
+    prisma = moduleRef.get<PrismaService>(PrismaService);
 
     await app.init();
   });
 
-  test('[POST] /sessions', async () => {
+  test("[POST] /sessions", async () => {
     await prisma.user.create({
       data: {
-        name: 'John Doe',
+        name: "John Doe",
 
-        email: 'johndoe@example.com',
+        email: "johndoe@example.com",
 
-        password: await hash('123456', 8),
+        password: await hash("123456", 8),
       },
     });
 
-    const response = await request(app.getHttpServer()).post('/sessions').send({
-      email: 'johndoe@example.com',
-
-      password: '123456',
-    });
+    const response = await request(app.getHttpServer() as import("http").Server)
+      .post("/sessions")
+      .send({
+        email: "johndoe@example.com",
+        password: "123456",
+      });
 
     expect(response.statusCode).toBe(201);
 
     expect(response.body).toEqual({
-      access_token: expect.any(String),
+      access_token: expect.any(String) as string,
     });
   });
 });

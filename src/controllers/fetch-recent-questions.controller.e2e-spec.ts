@@ -1,11 +1,11 @@
-import { AppModule } from '@/app.module';
-import { PrismaService } from '@/prisma/prisma.service';
-import { INestApplication } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Test } from '@nestjs/testing';
-import request from 'supertest';
+import { AppModule } from "@/app.module";
+import { PrismaService } from "@/prisma/prisma.service";
+import { INestApplication } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { Test } from "@nestjs/testing";
+import request from "supertest";
 
-describe('Fetch recent questions (E2E)', () => {
+describe("Fetch recent questions (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let jwt: JwtService;
@@ -22,12 +22,12 @@ describe('Fetch recent questions (E2E)', () => {
     await app.init();
   });
 
-  test('[GET] /questions', async () => {
+  test("[GET] /questions", async () => {
     const user = await prisma.user.create({
       data: {
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        password: '123456',
+        name: "John Doe",
+        email: "johndoe@example.com",
+        password: "123456",
       },
     });
 
@@ -36,30 +36,33 @@ describe('Fetch recent questions (E2E)', () => {
     await prisma.question.createMany({
       data: [
         {
-          title: 'Question 01',
-          slug: 'question-01',
-          content: 'Question content',
+          title: "Question 01",
+          slug: "question-01",
+          content: "Question content",
           authorId: user.id,
         },
 
         {
-          title: 'Question 02',
-          slug: 'question-02',
-          content: 'Question content',
+          title: "Question 02",
+          slug: "question-02",
+          content: "Question content",
           authorId: user.id,
         },
       ],
     });
 
-    const response = await request(app.getHttpServer())
-      .get('/questions')
-      .set('Authorization', `Bearer ${accessToken}`)
+    const response = await request(app.getHttpServer() as import("http").Server)
+      .get("/questions")
+      .set("Authorization", `Bearer ${accessToken}`)
       .send();
 
     expect(response.statusCode).toBe(200);
 
     expect(response.body).toEqual({
-      questions: [expect.objectContaining({ title: 'Question 01' }), expect.objectContaining({ title: 'Question 02' })],
+      questions: [
+        expect.objectContaining({ title: "Question 01" }),
+        expect.objectContaining({ title: "Question 02" }),
+      ],
     });
   });
 });

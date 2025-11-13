@@ -1,0 +1,34 @@
+import { NotificationsRepository } from "@/domain/notification/application/repositories/notifications-repository";
+import { Notification } from "@/domain/notification/enterprise/entities/notification";
+
+export class InMemoryNotificationsRepository
+  implements NotificationsRepository
+{
+  public items: Notification[] = [];
+
+  findById(id: string) {
+    const notification = this.items.find((item) => item.id.toString() === id);
+
+    if (!notification) {
+      return Promise.resolve(null);
+    }
+
+    return Promise.resolve(notification);
+  }
+
+  create(notification: Notification) {
+    this.items.push(notification);
+
+    return Promise.resolve();
+  }
+
+  save(notification: Notification) {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === notification.id,
+    );
+
+    this.items[itemIndex] = notification;
+
+    return Promise.resolve();
+  }
+}
