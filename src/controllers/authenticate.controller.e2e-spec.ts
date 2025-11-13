@@ -20,28 +20,24 @@ describe('Authenticate (E2E)', () => {
     await app.init();
   });
 
-  test('[POST] /accounts', async () => {
-    const email = 'jorge@gmail.com';
-    const name = 'Jorge';
-    const password = 'teste';
-
+  test('[POST] /sessions', async () => {
     await prisma.user.create({
       data: {
-        name,
-        email,
-        password: await hash('teste', 8),
+        name: 'John Doe',
+
+        email: 'johndoe@example.com',
+
+        password: await hash('123456', 8),
       },
     });
 
-    const response = await request(app.getHttpServer()).post('/sessions').send({ email, password });
+    const response = await request(app.getHttpServer()).post('/sessions').send({
+      email: 'johndoe@example.com',
+
+      password: '123456',
+    });
 
     expect(response.statusCode).toBe(201);
-
-    const userOnDatabase = prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
 
     expect(response.body).toEqual({
       access_token: expect.any(String),

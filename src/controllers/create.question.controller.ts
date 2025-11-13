@@ -1,6 +1,6 @@
 import { Body, ConflictException, Controller, HttpCode, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { CurrentuUser } from '@/auth/current-user-decorator';
-import { JwtAuthGuad } from '@/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { UserPayload } from '@/auth/jwt.strategy';
 import { ZodValidationPipe } from '@/pipes/zod-validation-pipe';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -16,7 +16,7 @@ const bodyValidationSchema = new ZodValidationPipe(createQuestionBodySchema);
 type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>;
 
 @Controller('/questions')
-@UseGuards(JwtAuthGuad)
+@UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
   constructor(private prisma: PrismaService) {}
 
