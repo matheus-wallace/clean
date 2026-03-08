@@ -1,4 +1,4 @@
-import { PrismaService } from "@/domain/prisma/prisma.service";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import {
   Body,
   ConflictException,
